@@ -38,7 +38,24 @@ library(myopt)
 
 **Part 2.** Coordinate Descent, Proximal Gradient Descent, and ADMM
 
-**Step 1:** Write a function "lasso_cd" The function should terminate either when a maximum number of iterations has been taken or if the relative change in the objective function has fallen below a tolerance
+**Step 1:** Write a function "softthreshold" that performs softthresholding elementwise on a vector.
+
+```{r, echo=TRUE}
+#' Soft-threshold
+
+#' Soft-threshold elements of a vector
+#'
+#' \code{softthreshold} softthresholds the elements of a vector
+#'
+#' @param x vector to shrink
+#' @param lambda regularization parameter
+#' @export
+softthreshold <- function(x, lambda) {
+
+}
+```
+
+**Step 2:** Write a function "lasso_cd" The function should terminate either when a maximum number of iterations has been taken or if the relative change in the objective function has fallen below a tolerance
 
 $$
 \frac{\lvert f(x_k) - f(x_{k-1})\rvert}{\lvert f(x_{k-1}) \rvert + 1)} < \text{tolerance}
@@ -64,7 +81,7 @@ lasso_cd <- function(y, X, beta0, lambda, max_iter=1e2, tol=1e-3) {
 - The final iterate value
 - The objective function values
 
-**Step 2:** Write a function "lasso_pgd." 
+**Step 3:** Write a function "lasso_pgd." 
 
 ```{r, echo=TRUE}
 #' Lasso (Proximal Gradient Descent)
@@ -90,7 +107,7 @@ Your function should return
 
 \newpage
 
-**Step 3:** Write a function "lasso_admm."
+**Step 4:** Write a function "lasso_admm."
 
 ```{r, echo=TRUE}
 #' Lasso (ADMM)
@@ -115,7 +132,7 @@ Your function should return
 - The final iterate value
 - The (primal) objective function values
 
-**Step 4:** Perform lasso regression with different values of $\lambda$ on the following data example $(y,X)$. Use your answers to Part 1 to choose an appropriate fixed step-size for the proximal gradient algorithm. Plot the objective function values $\ell(\beta_k)$ versus the iteration $k$ for all three methods. How does the lasso do at recovering the true sparse model?
+**Step 5:** Perform lasso regression with different values of $\lambda$ on the following data example $(y,X)$. Use your answers to Part 1 to choose an appropriate fixed step-size for the proximal gradient algorithm. Plot the objective function values $\ell(\beta_k)$ versus the iteration $k$ for all three methods. How does the lasso do at recovering the true sparse model?
 
 ```{r, echo=TRUE}
 set.seed(12345)
@@ -137,7 +154,7 @@ plot(x, y, type='n')
 
 \newpage
 
-**Part 5.** If you have additional time,
+**Part 3.** If you have additional time,
 
 - Try different values of $\rho$ for ADMM. What is the effective on the convergence speed?
 - Try adding in backtracking into the proximal gradient code.

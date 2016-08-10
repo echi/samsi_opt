@@ -1,3 +1,16 @@
+#' Soft-threshold
+
+#' Soft-threshold elements of a vector
+#'
+#' \code{softthreshold} softthresholds the elements of a vector
+#'
+#' @param x vector to shrink
+#' @param lambda regularization parameter
+#' @export
+softthreshold <- function(x, lambda) {
+
+}
+
 #' Lasso (Coordinate Descent)
 #'
 #' \code{lasso_cd} solves the lasso problem using coordinate descent.
