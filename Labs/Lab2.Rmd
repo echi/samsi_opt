@@ -64,7 +64,7 @@ lasso_cd <- function(y, X, beta0, lambda, max_iter=1e2, tol=1e-3) {
 - The final iterate value
 - The objective function values
 
-**Step 2:** Write a function "lass_pgd" 
+**Step 2:** Write a function "lasso_pgd." 
 
 ```{r, echo=TRUE}
 #' Lasso (Proximal Gradient Descent)
