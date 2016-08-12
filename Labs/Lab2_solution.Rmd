@@ -1,0 +1,192 @@
+---
+title: "Lab 2"
+date: "August 11, 2016"
+output: pdf_document
+---
+**Part 1.** We will investigate algorithms for iteratively solving the lasso problem or 1-norm regularized least squares problem. We first set some notation. Let $x_i \in \mathbb{R}^p, y_i \in \mathbb{R}$ for $i=1, \ldots, n$. Let $X \in \mathbb{R}^{n \times p}$ denote the matrix with $x_i$ as its $i$th row.
+Recall that the penalized negative log-likelihood $\ell(\beta)$ can be written as follows:
+$$
+\ell(\beta) = \frac{1}{2} \lVert y - Xb \rvert_2^2 + \lambda \lVert \beta \rVert_1
+$$
+
+1. Write the gradient and Hessian of $f(\beta) = \frac{1}{2} \lVert y - Xb \rvert_2^2$.
+
+**Answer:**
+$$
+\begin{aligned}
+\nabla f(\beta) &= X^T(Xb - y) \\
+\nabla^2 f(\beta) & = X^TX.
+\end{aligned}
+$$
+
+2. What is the computational complexity for a calculating the gradient and Hessian of $f(\beta)$?
+
+**Answer:**
+
+The gradient costs $\mathcal{O}(np)$ to compute, and the Hessian costs $\mathcal{O}(np^2)$ to compute.
+
+3. Under what condition is $\ell(\beta)$ strictly convex?
+
+**Answer:** $\ell(\beta)$ is strictly convex if and only if $\nabla^2 f(\beta)$ is positive definite, which occurs when $X$ has full rank.
+
+4. Prove that $f(\beta)$ is $L$-Lipschitz differentiable with $L = \lVert X \rVert_{\text{op}}^2$.
+
+**Answer:**
+
+$$
+\lVert \nabla f(\beta) - \nabla f(\tilde{\beta}) \rVert_2 
+= \lVert X^TX (\beta - \tilde{\beta}) \rVert_2 \leq \lVert X^TX \rVert_{\text{op}} \lVert \beta - \tilde{\beta} \rVert_2
+$$
+
+5. Prove that for all $\lambda \geq \lVert X^Ty \rVert_\infty$, the lasso solution is the all zeros vector.
+
+**Answer:**
+
+$\beta$ is a solution to the lasso problem with regularization parameter $\lambda$ if and only if
+
+$$
+X^T(y - X\beta) \in \lambda \partial \lVert \beta \rVert_1.
+$$
+
+So, if $\beta = 0$, then 
+
+$$
+X^Ty \in \lambda \partial \lVert 0 \rVert_1.
+$$
+
+Thus, $x_j^Ty \in \lambda \partial \lvert 0 \rvert$ for all $j$ where $x_j$ denotes the $j$th column of $X$.
+But recall that $\partial \lvert 0 \rvert = [-1,1]$. Therefore,
+$\lvert x_j^Ty \rvert \leq \lambda$ for all $j$. Or in other words,
+$\lVert X^Ty \rVert_\infty \leq \lambda$. The practical consequence is that you only need to consider lasso solutions for $\lambda \leq \lVert X^Ty \rVert_\infty$. You already know the answer without computing anything for $\lambda$ larger.
+
+\newpage
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(myopt)
+```
+
+**Part 2.** Coordinate Descent, Proximal Gradient Descent, and ADMM
+
+**Step 1:** Write a function "softthreshold" that performs softthresholding elementwise on a vector.
+
+```{r, echo=TRUE}
+#' Soft-threshold
+
+#' Soft-threshold elements of a vector
+#'
+#' \code{softthreshold} softthresholds the elements of a vector
+#'
+#' @param x vector to shrink
+#' @param lambda regularization parameter
+#' @export
+softthreshold <- function(x, lambda) {
+
+}
+```
+
+**Step 2:** Write a function "lasso_cd" The function should terminate either when a maximum number of iterations has been taken or if the relative change in the objective function has fallen below a tolerance
+
+$$
+\frac{\lvert f(x_k) - f(x_{k-1})\rvert}{\lvert f(x_{k-1}) \rvert + 1)} < \text{tolerance}
+$$
+
+```{r, echo=TRUE}
+#' Lasso (Coordinate Descent)
+#'
+#' \code{lasso_cd} solves the lasso problem using coordinate descent.
+#'
+#' @param y Response variable
+#' @param X design matrix
+#' @param beta0 initial guess of regression parameter
+#' @param lambda regularization parameter
+#' @param max_iter maximum number of iterations
+#' @param tol convergence tolerance
+#' @export
+lasso_cd <- function(y, X, beta0, lambda, max_iter=1e2, tol=1e-3) {
+
+}
+```
+
+- The final iterate value
+- The objective function values
+
+**Step 3:** Write a function "lasso_pgd." 
+
+```{r, echo=TRUE}
+#' Lasso (Proximal Gradient Descent)
+#'
+#' \code{lasso_pgd} solves the lasso problem using proximal gradient descent with a fixed step size
+#'
+#' @param y Response variable
+#' @param X design matrix
+#' @param beta0 initial guess of regression parameter
+#' @param lambda regularization parameter
+#' @param t step-size
+#' @param max_iter maximum number of iterations
+#' @param tol convergence tolerance
+#' @export
+lasso_pgd <- function(y, X, beta0, lambda, t, max_iter=1e2, tol=1e-3) {
+
+}
+```
+Your function should return
+
+- The final iterate value
+- The objective function values
+
+\newpage
+
+**Step 4:** Write a function "lasso_admm."
+
+```{r, echo=TRUE}
+#' Lasso (ADMM)
+#'
+#' \code{lasso_admm} solves the lasso problem using ADMM
+#'
+#' @param y Response variable
+#' @param X design matrix
+#' @param beta0 initial guess of regression parameter
+#' @param lambda regularization parameter
+#' @param rho parameter
+#' @param max_iter maximum number of iterations
+#' @param tol convergence tolerance
+#' @export
+lasso_admm <- function(y, X, beta0, lambda, rho=1, max_iter=1e2, tol=1e-3) {
+
+}
+```
+
+Your function should return
+
+- The final iterate value
+- The (primal) objective function values
+
+**Step 5:** Perform lasso regression with different values of $\lambda$ on the following data example $(y,X)$. Use your answers to Part 1 to choose an appropriate fixed step-size for the proximal gradient algorithm. Plot the objective function values $\ell(\beta_k)$ versus the iteration $k$ for all three methods. How does the lasso do at recovering the true sparse model?
+
+```{r, echo=TRUE}
+set.seed(12345)
+n <- 100
+p <- 2000
+
+X <- matrix(rnorm(n*p),n,p)
+beta0 <- matrix(0,p,1)
+beta0[1:5] <- runif(5)
+
+y <- X%*%beta0 + rnorm(n)
+```
+
+```{r, echo=FALSE, fig.width=6, fig.height=3}
+x <- 1:10
+y <- 1:10
+plot(x, y, type='n')
+```
+
+\newpage
+
+**Part 3.** If you have additional time,
+
+- Try different values of $\rho$ for ADMM. What is the effective on the convergence speed?
+- Try adding in backtracking into the proximal gradient code.
+- Implement FISTA, compare the run times with regular proximal gradient descent.
+
